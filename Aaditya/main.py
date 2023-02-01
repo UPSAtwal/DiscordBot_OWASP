@@ -22,7 +22,7 @@ class Client(discord.Client):
             desc = ""
 
             for content, link in data.items():
-                content = content[:30] + '...' if len(content) > 20 else content
+                content = content[:30] + '...' if len(content) > 30 else content
                 desc += f"- [{content}]({link})\n\n"
 
             await message.channel.send(embed=discord.Embed(color=discord.Colour.blurple(), title=x, description=desc))

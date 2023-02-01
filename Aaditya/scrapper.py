@@ -6,7 +6,7 @@ import pandas as pd
 class Scraper:
     def __init__(self):
         pass
-    def scrape(text):
+    def scrape(self, text):
         fQuery=text+' min_faves:4000'
         data=sntwitter.TwitterSearchScraper(fQuery)
         tweets=[]
@@ -18,4 +18,6 @@ class Scraper:
                 break
 
         fData=pd.DataFrame(tweets,columns='Link Username Content'.split())
-        #TODO
+        csvFile=text+'.csv'
+        fData.to_csv(csvFile,index=False)
+        return csvFile

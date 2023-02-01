@@ -6,7 +6,7 @@ import pandas as pd
 class Scraper:
     def __init__(self):
         pass
-    def scrape(self, text):
+    def scrape(self, text, num):
         fQuery=text+' min_faves:4000'
         data=sntwitter.TwitterSearchScraper(fQuery)
         tweets=[]
@@ -14,10 +14,11 @@ class Scraper:
         for i,tweet in enumerate(data.get_items()):
             data1=[tweet.url,tweet.user.username,tweet.rawContent]
             tweets.append(data1)
-            if i>50:
+            if i>num:
                 break
 
         fData=pd.DataFrame(tweets,columns='Link Username Content'.split())
-        csvFile=text+'.csv'
-        fData.to_csv(csvFile,index=False)
-        return csvFile
+        data = {}
+        for i in range(num):
+            data[fData.at[i, 'Content']] = fData.at[i, 'Link']
+        return data

@@ -10,13 +10,22 @@ class Client(discord.Client):
     async def on_message(self, message):
         if message.author == self.user:
             return
+            
         if message.content.startswith("!hi"):
             await message.channel.send(f"Hi! {message.author.mention}")
+
         elif message.content.startswith("!search"):
             x = ' '.join(message.content.split()[1:])
             await message.channel.send(f"Looking up twitter for {x}")
-            file = self.scraper.scrape(x)
-            await message.channel.send(file=discord.File(fp=file, spoiler=False))
+
+            data = self.scraper.scrape(x, 5)
+            desc = ""
+
+            for content, link in data.items():
+                content = content[:30] + '...' if len(content) > 30 else content
+                desc += f"- [{content}]({link})\n\n"
+
+            await message.channel.send(embed=discord.Embed(color=discord.Colour.blurple(), title=x, description=desc))
 
 def main():
     #only works if command is invoked from the working directory itself

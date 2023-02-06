@@ -18,7 +18,12 @@ class Client(discord.Client):
             x = ' '.join(message.content.split()[1:])
             await message.channel.send(f"Looking up twitter for {x}")
 
-            data = self.scraper.scrape(x, 5)
+            try:
+                data = self.scraper.scrape(x, 5)
+            except:
+                await message.channel.send(f"Couldn't find anything about {x} on twitter")
+                return
+            
             desc = ""
 
             for content, link in data.items():

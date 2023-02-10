@@ -13,5 +13,5 @@ class Config:
             for i, j in self.config.items():
                 file.write(f'{i}={j}\n')
     
-    def show(self):
-        print(self.config)
+    def val(self, key):
+        return self.config[key]

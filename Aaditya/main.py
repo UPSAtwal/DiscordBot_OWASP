@@ -1,11 +1,13 @@
 import discord
 from scrapper import Scraper
+from config import Config
 
 class Client(discord.Client):
 
     async def on_ready(self):
         print("Bot is online!")
         self.scraper = Scraper()
+        self.config = Config('config')
 
     async def on_message(self, message):
         if message.author == self.user:
@@ -19,7 +21,7 @@ class Client(discord.Client):
             await message.channel.send(f"Looking up twitter for {x}")
 
             try:
-                data = self.scraper.scrape(x, 5)
+                data = self.scraper.scrape(x, int(self.config.val('num')), self.config.val('likes'))
             except:
                 await message.channel.send(f"Couldn't find anything about {x} on twitter")
                 return
@@ -31,6 +33,23 @@ class Client(discord.Client):
                 desc += f"- [{content}]({link})\n\n"
 
             await message.channel.send(embed=discord.Embed(color=discord.Colour.blurple(), title=x, description=desc))
+
+        elif message.content.startswith('!setlikes'):
+            try:
+                x = int(message.content.split()[1])
+                self.config.update('likes', x)
+                await message.channel.send(f"Done! Minimum likes set to {x}")
+            except:
+                await message.channel.send("Please enter an integer value")
+
+        elif message.content.startswith('!setnum'):
+            try:
+
+                x = int(message.content.split()[1])
+                self.config.update('num', x)
+                await message.channel.send(f"Done! Number of entries set to {x}")
+            except:
+                await message.channel.send("Please enter an integer value")
 
 def main():
     #only works if command is invoked from the working directory itself

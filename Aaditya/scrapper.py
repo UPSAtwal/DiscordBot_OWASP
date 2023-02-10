@@ -6,8 +6,8 @@ import pandas as pd
 class Scraper:
     def __init__(self):
         pass
-    def scrape(self, text, num):
-        fQuery=text+' min_faves:4000'
+    def scrape(self, text, num, likes):
+        fQuery=text+f' min_faves:{likes}'
         data=sntwitter.TwitterSearchScraper(fQuery)
         tweets=[]
 

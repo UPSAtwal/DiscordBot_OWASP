@@ -2,6 +2,7 @@ import discord
 from scrapper import Scraper
 from config import Config
 
+
 class Client(discord.Client):
 
     async def on_ready(self):
@@ -12,7 +13,7 @@ class Client(discord.Client):
     async def on_message(self, message):
         if message.author == self.user:
             return
-            
+
         if message.content.startswith("!hi"):
             await message.channel.send(f"Hi! {message.author.mention}")
 
@@ -21,15 +22,17 @@ class Client(discord.Client):
             await message.channel.send(f"Looking up twitter for {x}")
 
             try:
-                data = self.scraper.scrape(x, int(self.config.val('num')), self.config.val('likes'))
+                data = self.scraper.scrape(x, int(self.config.val('num')), self.config.val(
+                    'likes'), self.config.val('ldate'), self.config.val('sdate'))
             except:
                 await message.channel.send(f"Couldn't find anything about {x} on twitter")
                 return
-            
+
             desc = ""
 
             for content, link in data.items():
-                content = content[:30] + '...' if len(content) > 30 else content
+                content = content[:30] + \
+                    '...' if len(content) > 30 else content
                 desc += f"- [{content}]({link})\n\n"
 
             await message.channel.send(embed=discord.Embed(color=discord.Colour.blurple(), title=x, description=desc))
@@ -51,16 +54,27 @@ class Client(discord.Client):
             except:
                 await message.channel.send("Please enter an integer value")
 
+        elif message.content.startswith('!sdate'):
+            x = message.content.split()[1]
+            self.config.update('sdate', x)
+            await message.channel.send(f"Done! Only Tweets made after {x} will be shown")
+
+        elif message.content.startswith('!ldate'):
+            x = message.content.split()[1]
+            self.config.update('ldate', x)
+            await message.channel.send(f"Done! Only Tweets made before {x} will be shown")
+
 def main():
-    #only works if command is invoked from the working directory itself
-    with open(".env", "r") as file: 
+    # only works if command is invoked from the working directory itself
+    with open(".env", "r") as file:
         token = file.readline()
-    
+
     intent = discord.Intents.default()
     intent.message_content = True
-    
+
     client = Client(intents=intent)
     client.run(token)
+
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,5 @@
-likes=50000
-num=1
-sdate=2022-02-01
-ldate=2022-02-18
+likes=1000
+num=5
+sdate=2023-01-01
+ldate=2023-02-17
+prefix=$

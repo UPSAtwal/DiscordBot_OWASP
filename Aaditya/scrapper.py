@@ -7,7 +7,7 @@ class Scraper:
     def __init__(self):
         pass
     def scrape(self, text, num, likes, ldate, sdate):
-        fQuery=fQuery="{} min_faves:{} until:{} since:{}".format(text, likes,ldate,sdate)
+        fQuery = fQuery = f"{text} min_faves:{likes} until:{ldate} since:{sdate}"
         data=sntwitter.TwitterSearchScraper(fQuery)
         tweets=[]
 
@@ -18,7 +18,5 @@ class Scraper:
                 break
 
         fData=pd.DataFrame(tweets,columns='Link Username Content'.split())
-        data = {}
-        for i in range(num):
-            data[fData.at[i, 'Content']] = fData.at[i, 'Link']
+        data = {fData.at[i, 'Content']: fData.at[i, 'Link'] for i in range(num)}
         return data

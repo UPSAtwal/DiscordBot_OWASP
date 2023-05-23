@@ -3,7 +3,7 @@ class Config:
         self.configpath = filename
         self.config = {}
         with open(self.configpath, "r") as file:
-            for i in file.readlines():
+            for i in file:
                 i = i.split("=")
                 self.config[i[0]] = i[1].strip()
 
